@@ -1,4 +1,7 @@
 export const EVENTS = {
+	DITRO_CLI: {
+		END: 'end'
+	},
 	DITRO_HANDLER: {
 		LOAD: 'load',
 		REMOVE: 'remove'
@@ -8,7 +11,7 @@ export const EVENTS = {
 		COMMAND_FINISHED: 'commandFinished',
 		ERROR: 'error',
 		INVALID_COMMAND: 'invalidCommand',
-		PROMPT_START: 'promptStart',
+		PROMPT_START: 'promptStarted',
 		PROMPT_FINISHED: 'promptFinished'
 	}
 };

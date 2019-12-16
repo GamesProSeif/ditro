@@ -1,3 +1,4 @@
+import { DitroCli } from './DitroCli';
 import { DitroHandler } from './DitroHandler';
 
 export interface DitroModuleOptions {
@@ -8,6 +9,7 @@ export class DitroModule {
 	public readonly id: string;
 	public readonly category: string;
 	public filepath!: string | null;
+	public cli!: DitroCli;
 	public handler!: DitroHandler;
 
 	public constructor(id: string, {

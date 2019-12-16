@@ -1,7 +1,7 @@
 {
   "name": "ditro",
   "description": "An OOP CLI package that will ease your CLI production.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "dist/index.js",
   "types": "typings/index.d.ts",
   "author": "GamesProSeif",
@@ -19,12 +19,13 @@
     "postversion": "git push origin master && git push origin master --tags"
   },
   "dependencies": {
+    "@types/node": "^12.12.18",
+    "args-and-flags": "^2.3.0",
     "inquirer": "^7.0.1",
     "typescript": "^3.7.3"
   },
   "devDependencies": {
     "@types/inquirer": "^6.5.0",
-    "@types/node": "^12.12.18",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
     "eslint": "^6.7.2",

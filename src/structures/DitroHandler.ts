@@ -3,6 +3,7 @@
 import * as EventEmitter from 'events';
 import { extname, join } from 'path';
 import { readdirSync, statSync } from 'fs';
+import { DitroCli } from './DitroCli';
 import { DitroModule } from './DitroModule';
 import DitroError from '../util/DitroError';
 import { EVENTS } from '../util/Constants';
@@ -13,20 +14,27 @@ export interface DitroHandlerOptions {
 	classToHandle?: Function;
 }
 
+export declare interface DitroHandler {
+	on(event: 'load', listener: (module: DitroModule, isReload: boolean) => void): this;
+	on(event: 'remove', listener: (module: DitroModule) => void): this;
+}
+
 export class DitroHandler extends EventEmitter {
+	public cli: DitroCli;
 	public directory: string;
 	public modules: Map<string, DitroModule>;
 	public categories: Map<string, Map<string, DitroModule>>;
 	public extensions: Set<string>;
 	public classToHandle: Function;
 
-	public constructor({
+	public constructor(cli: DitroCli, {
 		directory = join(process.cwd(), 'modules'),
 		extensions = ['.js', '.ts', '.json'],
 		classToHandle = DitroModule
 	}: DitroHandlerOptions = {}) {
 		super();
 
+		this.cli = cli;
 		this.modules = new Map();
 		this.categories = new Map();
 		this.directory = directory;
@@ -117,6 +125,7 @@ export class DitroHandler extends EventEmitter {
 			this.categories.get(mod.category)!.set(mod.id, mod);
 		}
 		mod.handler = this;
+		mod.cli = this.cli;
 		mod.filepath = filepath;
 	}
 
