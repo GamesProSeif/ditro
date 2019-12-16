@@ -1,7 +1,7 @@
 {
   "name": "ditro",
   "description": "An OOP CLI package that will ease your CLI production.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "typings/index.d.ts",
   "author": "GamesProSeif",
@@ -11,7 +11,12 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix"
+    "lint:fix": "eslint src --ext .ts --fix",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "git add -A src",
+    "postversion": "git push origin master && git push origin master --tags"
   },
   "dependencies": {
     "inquirer": "^7.0.1",
