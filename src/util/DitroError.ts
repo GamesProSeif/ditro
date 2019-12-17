@@ -10,7 +10,11 @@ const MESSAGES: { [key: string]: any } = {
 	NO_DIRECTORY_SPECIFIED: (classToHandle: string) =>
 		`No directory specified in "${classToHandle}" handler`,
 	NO_ABSTRACT_EXEC: (classToHandle: string, id: string) =>
-		`You cannot invoke this function ${classToHandle}#exec - id: ${id}`
+		`You cannot invoke this function ${classToHandle}#exec - id: ${id}`,
+	MISSING_PARAMETER: (classMissing: string, id: string, missing: string) =>
+		`Missing parameter ${missing} in ${classMissing} - id: ${id}`,
+	INVALID_TYPE: (name: string, expected: string, vowel: boolean) =>
+		`Value of '${name}' was not ${vowel ? 'an' : 'a'} ${expected}`
 };
 
 export default class DitroError extends Error {

@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { prompt } from 'inquirer';
+import { prompt, Question } from 'inquirer';
 // @ts-ignore
 import * as ArgsAndFlags from 'args-and-flags';
 import { DitroCli } from '../DitroCli';
@@ -15,14 +15,15 @@ export interface CommandHandlerOptions extends DitroHandlerOptions {
 export declare interface CommandHandler {
 	on(event: 'load', listener: (command: Command, isReload: boolean) => void): this;
 	on(event: 'remove', listener: (command: Command) => void): this;
-	on(event: 'commandFinished', listener: (command: Command, argv: string, data: CommandExecData) => void): this;
-	on(event: 'commandStarted' | 'promptStarted' | 'promptFinished', listener: (command: Command, argv: string[]) => void): this;
+	on(event: 'commandStarted' | 'commandFinished', listener: (command: Command, argv: string[], data: CommandExecData) => void): this;
+	on(event: 'promptStarted' | 'promptFinished', listener: (command: Command, argv: string[], promptData: Question[]) => void): this;
 	on(event: 'invalidCommand', listener: (argv: string[]) => void): this;
 	on(event: 'error', listener: (error: Error, command: Command, argv: string[], data: CommandExecData) => void): this;
 }
 
 export class CommandHandler extends DitroHandler {
 	public modules!: Map<string, Command>;
+	public categories!: Map<string, Map<string, Command>>;
 	public aliases: Map<string, string>;
 	public aliasReplacement: RegExp | undefined;
 
@@ -108,9 +109,9 @@ export class CommandHandler extends DitroHandler {
 		}
 
 		if (command.prompt && command.prompt.length) {
-			this.emit(EVENTS.COMMAND_HANDLER.PROMPT_START, command, argv);
+			this.emit(EVENTS.COMMAND_HANDLER.PROMPT_START, command, argv, command.prompt);
 			data.prompt = await prompt(command.prompt);
-			this.emit(EVENTS.COMMAND_HANDLER.PROMPT_FINISHED, command, argv);
+			this.emit(EVENTS.COMMAND_HANDLER.PROMPT_FINISHED, command, argv, command.prompt);
 		}
 
 		this.emit(EVENTS.COMMAND_HANDLER.COMMAND_STARTED, command, argv, data);

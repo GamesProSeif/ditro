@@ -12,6 +12,7 @@ export interface DitroHandlerOptions {
 	directory?: string;
 	extensions?: string[];
 	classToHandle?: Function;
+	loadFilter?: (filepath: string) => boolean;
 }
 
 export declare interface DitroHandler {
@@ -26,11 +27,13 @@ export class DitroHandler extends EventEmitter {
 	public categories: Map<string, Map<string, DitroModule>>;
 	public extensions: Set<string>;
 	public classToHandle: Function;
+	public loadFilter: (filepath: string) => boolean;
 
 	public constructor(cli: DitroCli, {
 		directory = join(process.cwd(), 'modules'),
 		extensions = ['.js', '.ts', '.json'],
-		classToHandle = DitroModule
+		classToHandle = DitroModule,
+		loadFilter = (() => true)
 	}: DitroHandlerOptions = {}) {
 		super();
 
@@ -40,6 +43,7 @@ export class DitroHandler extends EventEmitter {
 		this.directory = directory;
 		this.extensions = new Set(extensions);
 		this.classToHandle = classToHandle;
+		this.loadFilter = loadFilter;
 	}
 
 	public load(thing: DitroModule | string, isReload = false): DitroModule | undefined {
@@ -61,13 +65,13 @@ export class DitroHandler extends EventEmitter {
 		return mod;
 	}
 
-	public loadAll(dir = this.directory): DitroHandler {
+	public loadAll(dir = this.directory, filter = this.loadFilter || (() => true)): DitroHandler {
 		if (!dir) {
 			throw new DitroError('NO_DIRECTORY_SPECIFIED', this.classToHandle.name);
 		}
 		const paths = DitroHandler.readdirRecursive(dir);
 		for (const path of paths) {
-			if (this.extensions.has(extname(path))) this.load(path);
+			if (this.extensions.has(extname(path)) && filter(path)) this.load(path);
 		}
 
 		return this;
